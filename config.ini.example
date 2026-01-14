@@ -1,0 +1,6 @@
+[settings]
+screenshot_save_dir = C:\Screenshots
+jpeg_quality = 80
+screenshot_interval_seconds = 60
+skip_if_inactive_seconds = 180
+enable_logging = 0
