@@ -1,0 +1,6 @@
+target/
+_supplementary_files_1/
+.vscode/
+_compile_rust__1.bat
+_compile_rust__release__1.bat
+_public_github_last_minute_steps__1.txt

@@ -1,0 +1,40 @@
+name: Build and Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Build Release
+        run: cargo build --release
+      
+      # Package the exe and config files into a zip
+      - name: Prepare Release Assets
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME -replace '^v', ''
+          $zipName = "tray-scsht-app-$version-win64.zip"
+          New-Item -ItemType Directory -Force -Path "release"
+          Copy-Item "target/release/tray-scsht-app.exe" "release/"
+          Copy-Item "config.ini.example" "release/config.ini"
+          Compress-Archive -Path "release/*" -DestinationPath $zipName -CompressionLevel Optimal
+        id: package
+        
+      # Create a GitHub Release with the zip attached
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: tray-scsht-app-*-win64.zip
+          generate_release_notes: true
